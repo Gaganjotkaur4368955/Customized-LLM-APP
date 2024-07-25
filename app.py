@@ -14,7 +14,7 @@ class MyApp:
         self.documents = []
         self.embeddings = None
         self.index = None
-        self.load_pdf("THEDIA1.pdf")
+        self.load_pdf("Mypdf.pdf")  # Replace with the actual PDF filename
         self.build_vector_db()
 
     def load_pdf(self, file_path: str) -> None:
@@ -53,7 +53,7 @@ def respond(
     temperature: float,
     top_p: float,
 ):
-    system_message = "You are a knowledgeable DBT coach. You always talk about one options at at a time. you add greetings and you ask questions like real counsellor. Remember you are helpful and a good listener. You are concise and never ask multiple questions, or give long response. You response like a human counsellor accurately and correctly. consider the users as your client. and practice verbal cues only where needed. Remember you must be respectful and consider that the user may not be in a situation to deal with a wordy chatbot.  You Use DBT book to guide users through DBT exercises and provide helpful information. When needed only then you ask one follow up question at a time to guide the user to ask appropiate question. You avoid giving suggestion if any dangerous act is mentioned by the user and refer to call someone or emergency."
+    system_message = "You are a good presenter and advice Study material based on Mypdf guide to Focus on Goals.You provide helpful advice on managing stress. You ask one question at a time when clarification is needed. Remember to be polite and considerate in your responses. Use the guide to provide accurate and helpful information for focusing on your goals."
     messages = [{"role": "system", "content": system_message}]
 
     for val in history:
@@ -67,15 +67,15 @@ def respond(
     # RAG - Retrieve relevant documents
     retrieved_docs = app.search_documents(message)
     context = "\n".join(retrieved_docs)
-    messages.append({"role": "system", "content": "Relevant documents: " + context})
+    messages.append({"role": "system", "content": "Relevant information: " + context})
 
     response = ""
     for message in client.chat_completion(
         messages,
         max_tokens=100,
         stream=True,
-        temperature=0.98,
-        top_p=0.7,
+        temperature=0.7,
+        top_p=0.9,
     ):
         token = message.choices[0].delta.content
         response += token
@@ -85,22 +85,19 @@ demo = gr.Blocks()
 
 with demo:
     gr.Markdown(
-        "‼️Disclaimer: This chatbot is based on a DBT exercise book that is publicly available. and just to test RAG implementation.‼️"
+        "‼️Disclaimer: This chatbot is based on Mypdf guide and is intended for general advice on managing stress and study schedule.‼️"
     )
     
     chatbot = gr.ChatInterface(
         respond,
         examples=[
-            ["I feel overwhelmed with work."],
-            ["Can you guide me through a quick meditation?"],
-            ["How do I stop worrying about things I can't control?"],
-            ["What are some DBT skills for managing anxiety?"],
-            ["Can you explain mindfulness in DBT?"],
-            ["I am interested in DBT excercises"],
-            ["I feel restless. Please help me."],
-            ["I have destructive thoughts coming to my mind repetatively."]
+            ["How I feel positive about my studies?"],
+            ["What do meditation relax my stress?"],
+            ["Can you guide me about my career Options?"],
+            ["How do I ignore the negative facts and remain positive?"],
+        
         ],
-        title='Dialectical Behaviour Therapy Assistant👩‍⚕️🧘‍♀️'
+        title='Focus on your goals❤️🕊️'
     )
 
 if __name__ == "__main__":
