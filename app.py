@@ -72,7 +72,7 @@ def respond(
     response = ""
     for message in client.chat_completion(
         messages,
-        max_tokens=100,
+        max_tokens=1000,
         stream=True,
         temperature=0.7,
         top_p=0.9,
